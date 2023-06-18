@@ -19,6 +19,7 @@ public class PlanetGenerator : MonoBehaviour
 
     TerrainFace[] terrainFaces;
     MeshRenderer[] terrainFaceRenderer;
+    MeshFilter[] terrainFaceFilter;
 
     [SerializeField]
     private Material terrainFaceMaterial;
@@ -26,7 +27,7 @@ public class PlanetGenerator : MonoBehaviour
     [SerializeField, Range(2, 255)]
     private int resolution;
 
-        [SerializeField]
+    [SerializeField]
     private ShapeSettings shapeSettings;
     public ShapeSettings Shapesettings => shapeSettings;
     [HideInInspector]
@@ -42,12 +43,18 @@ public class PlanetGenerator : MonoBehaviour
     {
         shapeGenerator.UpdateSettings(shapeSettings);
         //6, because a cube needs to be generated
-        if (terrainFaces == null || terrainFaces.Length != 6)
-            terrainFaces = new TerrainFace[6];
-        terrainFaceRenderer = new MeshRenderer[6];
+        if (terrainFaces == null || terrainFaces.Length != 6 || 
+            terrainFaceFilter == null || terrainFaceFilter.Length != 6)
+        {
+            terrainFaceRenderer = new MeshRenderer[6];
+            terrainFaceFilter = new MeshFilter[6];
+        }
+
+        terrainFaces = new TerrainFace[6];
+
         for (int i = 0; i < 6; i++)
         {
-            if (terrainFaces[i] == null)
+            if (terrainFaceRenderer[i] == null)
             {
                 //Object generation
                 GameObject newFace = new GameObject();
@@ -58,20 +65,20 @@ public class PlanetGenerator : MonoBehaviour
 
                 //Component distribution
                 terrainFaceRenderer[i] = newFace.AddComponent<MeshRenderer>();
-                MeshFilter filter = newFace.AddComponent<MeshFilter>();
+                terrainFaceFilter[i] = newFace.AddComponent<MeshFilter>();
                 Mesh mesh = new Mesh();
                 mesh.name = $"TerrainMesh_{i}";
 
-                terrainFaceRenderer[i].sharedMaterial = terrainFaceMaterial;
-                filter.sharedMesh = mesh;
+                terrainFaceFilter[i].sharedMesh = mesh;
 
                 //Give info to terrain faces
-                terrainFaces[i] = new TerrainFace(shapeGenerator, mesh, directions[i]);
             }
+            terrainFaces[i] = new TerrainFace(shapeGenerator, terrainFaceFilter[i].sharedMesh, directions[i]);
+            terrainFaceRenderer[i].sharedMaterial = terrainFaceMaterial;
         }
     }
 
-    
+
 
     private void GenerateMesh()
     {

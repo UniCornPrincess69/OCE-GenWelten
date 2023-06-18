@@ -13,3 +13,25 @@ MonoBehaviour:
   m_Name: Default
   m_EditorClassIdentifier: 
   useFancySphere: 0
+  PlanetRadius: 10
+  NoiseLayers:
+  - Enabled: 1
+    UseFirstLayerAsMask: 0
+    noiseSettings:
+      Strength: 0.03
+      Layers: 4
+      Persistence: 0.3
+      BaseRoughness: 2.5
+      Roughness: 5
+      Center: {x: -12.4, y: 10.47, z: 32.77}
+      GroundLevel: 0.5
+  - Enabled: 1
+    UseFirstLayerAsMask: 1
+    noiseSettings:
+      Strength: 6
+      Layers: 4
+      Persistence: 0.3
+      BaseRoughness: 3
+      Roughness: 4
+      Center: {x: 25.63, y: -62, z: 74.11}
+      GroundLevel: 0.8
