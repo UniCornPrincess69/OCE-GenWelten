@@ -15,6 +15,17 @@ public class PlanetGenerator : MonoBehaviour
         Vector3.back
     };
 
+    [SerializeField]
+    private Vector3 position;
+
+    [SerializeField]
+    private Vector3 rotation;
+
+    [SerializeField]
+    private Vector3 scale;
+
+    private Matrix4x4 matrix;
+
     ShapeGenerator shapeGenerator = new ShapeGenerator();
 
     TerrainFace[] terrainFaces;
@@ -50,6 +61,8 @@ public class PlanetGenerator : MonoBehaviour
             terrainFaceFilter = new MeshFilter[6];
         }
 
+        GenerateTransformMatrix();
+         
         terrainFaces = new TerrainFace[6];
 
         for (int i = 0; i < 6; i++)
@@ -73,7 +86,7 @@ public class PlanetGenerator : MonoBehaviour
 
                 //Give info to terrain faces
             }
-            terrainFaces[i] = new TerrainFace(shapeGenerator, terrainFaceFilter[i].sharedMesh, directions[i]);
+            terrainFaces[i] = new TerrainFace(shapeGenerator, terrainFaceFilter[i].sharedMesh, directions[i], matrix);
             terrainFaceRenderer[i].sharedMaterial = terrainFaceMaterial;
         }
     }
@@ -86,6 +99,49 @@ public class PlanetGenerator : MonoBehaviour
         {
             terrainFaces[i].GenerateMesh(resolution);
         }
+    }
+
+    private void GenerateTransformMatrix()
+    {
+        Matrix4x4 positionMatrix = new Matrix4x4();
+        positionMatrix.SetRow(0, new Vector4(0, 0, 0, position.x));
+        positionMatrix.SetRow(1, new Vector4(0, 0, 0, position.y));
+        positionMatrix.SetRow(2, new Vector4(0, 0, 0, position.z));
+        positionMatrix.SetRow(3, new Vector4(0, 0, 0, 1));
+
+        float cosX = Mathf.Cos(rotation.x * Mathf.Deg2Rad);
+        float sinX = Mathf.Sin(rotation.x * Mathf.Deg2Rad);
+        Matrix4x4 rotationMatrix_X = new Matrix4x4();
+        positionMatrix.SetRow(0, new Vector4(1, 0, 0, 0));
+        positionMatrix.SetRow(1, new Vector4(0, cosX, -sinX, 0));
+        positionMatrix.SetRow(2, new Vector4(0, sinX, cosX, 0));
+        positionMatrix.SetRow(3, new Vector4(0, 0, 0, 1));
+
+        float cosY = Mathf.Cos(rotation.x * Mathf.Deg2Rad);
+        float sinY = Mathf.Sin(rotation.x * Mathf.Deg2Rad);
+        Matrix4x4 rotationMatrix_Y = new Matrix4x4();
+        positionMatrix.SetRow(0, new Vector4(cosY, 0, sinY, 0));
+        positionMatrix.SetRow(1, new Vector4(0, 0, 0, 0));
+        positionMatrix.SetRow(2, new Vector4(-sinY, 0, cosY, 0));
+        positionMatrix.SetRow(3, new Vector4(0, 0, 0, 1));
+
+        float cosZ = Mathf.Cos(rotation.x * Mathf.Deg2Rad);
+        float sinZ = Mathf.Sin(rotation.x * Mathf.Deg2Rad);
+        Matrix4x4 rotationMatrix_Z = new Matrix4x4();
+        positionMatrix.SetRow(0, new Vector4(cosZ, -sinZ, 0, 0));
+        positionMatrix.SetRow(1, new Vector4(sinZ, cosZ, 0, 0));
+        positionMatrix.SetRow(2, new Vector4(0, 0, 0, 0));
+        positionMatrix.SetRow(3, new Vector4(0, 0, 0, 1));
+
+        Matrix4x4 rotationMatrixFull = rotationMatrix_X * rotationMatrix_Y * rotationMatrix_Z;
+
+        Matrix4x4 scaleMatrix = new Matrix4x4();
+        scaleMatrix.SetRow(0, new Vector4(scale.x, 0, 0, 0));
+        scaleMatrix.SetRow(1, new Vector4(0, scale.y, 0, 0));
+        scaleMatrix.SetRow(2, new Vector4(0, 0, scale.z, 0));
+        scaleMatrix.SetRow(3, new Vector4(0, 0, 0, 1));
+
+        matrix = rotationMatrixFull * scaleMatrix;
     }
 
     public void OnShapeSettingsUpdate()

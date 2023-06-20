@@ -10,13 +10,16 @@ public class TerrainFace
     Vector3 AxisB;
     ShapeGenerator shapeGenerator;
 
-    public TerrainFace(ShapeGenerator shapeGenerator, Mesh mesh, Vector3 upDirection)
+    Matrix4x4 transformMatrix;
+
+    public TerrainFace(ShapeGenerator shapeGenerator, Mesh mesh, Vector3 upDirection, Matrix4x4 transformMatrix)
     {
         this.shapeGenerator = shapeGenerator;
         this.mesh = mesh;
         this.upDirection = upDirection;
         AxisA = new Vector3(upDirection.y, upDirection.z, upDirection.x);
         AxisB = Vector3.Cross(AxisA, upDirection);
+        this.transformMatrix = transformMatrix;
     }
 
     public void GenerateMesh(int resolution)

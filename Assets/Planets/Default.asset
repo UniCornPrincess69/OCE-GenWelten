@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c70d8fefafe9c5141a54062428aa220d, type: 3}
   m_Name: Default
   m_EditorClassIdentifier: 
-  useFancySphere: 0
+  useFancySphere: 1
   PlanetRadius: 10
   NoiseLayers:
   - Enabled: 1
@@ -20,7 +20,7 @@ MonoBehaviour:
     noiseSettings:
       Strength: 0.03
       Layers: 4
-      Persistence: 0.3
+      Persistence: 0.1
       BaseRoughness: 2.5
       Roughness: 5
       Center: {x: -12.4, y: 10.47, z: 32.77}
@@ -30,7 +30,7 @@ MonoBehaviour:
     noiseSettings:
       Strength: 6
       Layers: 4
-      Persistence: 0.3
+      Persistence: 0.5
       BaseRoughness: 3
       Roughness: 4
       Center: {x: 25.63, y: -62, z: 74.11}
